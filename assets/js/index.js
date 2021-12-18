@@ -1,25 +1,5 @@
 $(function(){
-    $.ajax({
-        method:"GET",
-        url:"/my/userinfo",
-        // headers:{
-        //     Authorization:localStorage.getItem("token"),
-        // },
-        success:function(res){
-            console.log(res);
-            if(res.code !== 0){
-                return layui.layer.msg("信息获取失败")
-            }
-            renderUserMsg(res.data)
-        },
-        // complete:function(res){
-        //     console.log(res);
-        //     if(res.responseJSON.code !== 0 && res.responseJSON.message === '身份认证失败！'){
-        //         localStorage.removeItem("token")
-        //         location.href="../../login.html"
-        //     }
-        // }
-    })
+    getUserInfo()
     $("#userLogOut").on("click",function(){
         layer.confirm('确认退出登录吗？', {icon: 3, title:'提示'}, function(index){
             //do something
@@ -28,10 +8,28 @@ $(function(){
             layer.close(index);
           });
     })
-
+   
+    
+    
 })
-
-
+function getUserInfo(){
+    $.ajax({
+        method:"GET",
+        url:"/my/userinfo",
+        //header请求头配置对象
+        // headers:{
+        //     Authorization: localStorage.getItem("token") || ''
+        // },
+        success:function(res){
+            if(res.code !== 0){
+                return console.log("用户信息获取失败!");
+            }
+            // console.log(res);
+            //调用 renderAvatar 渲染用户头像
+            renderUserMsg(res.data)
+        },
+    })
+}
 function renderUserMsg(user){
     let uname = user.nickname || user.username;
     $(".welcome").html("欢迎&nbsp;&nbsp;"+uname)
@@ -44,3 +42,4 @@ function renderUserMsg(user){
         $(".text-avatar").show().html(uname[0].toUpperCase())
     }
 }
+
